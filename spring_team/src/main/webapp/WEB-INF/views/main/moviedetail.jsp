@@ -8,18 +8,65 @@
 <meta charset="UTF-8">
 <title>영화 상세</title>
 <style type="text/css">
+/*     .navbar {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e0e0e0;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+    box-sizing: border-box;
+    height: 80px;
+}
+.navbar .logo a {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333333;
+    text-decoration: none;
+}
 
-/* 버튼 스타일 */
+.navbar .menu {
+    display: flex;
+    gap: 20px;
+}
+
+.navbar .menu a {
+    color: #333333;
+    text-decoration: none;
+    padding: 10px;
+    font-weight: bold;
+}
+
+.navbar .menu a:hover {
+    color: #e71a0f;
+}
+.navbar a {
+    color: #333333;
+    text-decoration: none;
+    padding: 10px;
+    font-weight: bold;
+}
+
+.navbar a:hover {
+    color: #e71a0f;
+}
+// 버튼 스타일 
 .footer {
     background-color: #333333;
     color: #ffffff;
     text-align: center;
     padding: 20px 0;
-    position: fixed;
-    bottom: 0;
+    //position: fixed; //고정 위치 속성 삭제 
+    position: relative;
+    transform: translateY(-100%);
+    bottom: 0; //고정 위치 관련 속성 삭제
     width: 100%;
     border-top: 1px solid #e0e0e0;
-    z-index: 1000;
 }
 
 .footer-content {
@@ -46,7 +93,7 @@
     font-size: 1em;
     font-weight: normal;
 }
-
+ */
 /* 기본적인 레이아웃 */
 #contents_new23 {
     width: 100%;
@@ -55,6 +102,7 @@
     padding: 20px;
     font-family: Arial, sans-serif;
     color: #333;
+    height: 100%;
 }
 
 #contents {
@@ -99,16 +147,16 @@
     margin-bottom: 20px;
     list-style-type: none; /* 기본 점 제거 */
 }
-
-.mov_info1 li::after {
-    content: '|'; /* 각 항목 사이에 구분 기호 추가 */
-    margin-left: 10px;
+.mov_info1 li span {
+    margin-right: 10px; /* 각 span 요소 사이에 간격 추가 */
 }
-
 .mov_info1 li:last-child::after {
     content: ''; /* 마지막 항목에는 구분 기호 없앰 */
 }
-
+.mov_info1 li {
+    display: flex;
+    align-items: center;
+}
 .txtarea_box {
     margin-top: 20px;
 }
@@ -128,6 +176,7 @@
     border-radius: 5px;
     transition: background-color 0.3s;
     margin-top: 20px;
+	text-align : right;
 }
 
 .button:hover {
@@ -141,7 +190,6 @@
 
 .innerfull.gray {
     background-color: #f9f9f9;
-    padding: 20px 0;
 }
 
 .inner980 {
@@ -159,6 +207,10 @@
     list-style: none;
     padding: 0;
     margin: 0;
+    background-color: #fff;
+    border: 1px solid #ddd; /* 테두리 추가 */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+    padding: 20px;
 }
 
 .detail_info2 li {
@@ -177,6 +229,70 @@
 .detail_info2 li span {
     color: #666;
 }
+    /* 수정 버튼과 입력 필드 스타일 */
+    .edit-input {
+        padding: 10px;
+        margin: 10px 0;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 저장 버튼 스타일 */
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #ff5500;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+        margin-top: 20px;
+        text-align: right;
+        cursor: pointer;
+        border: none;
+        font-size: 16px;
+    }
+
+    .button:hover {
+        background-color: #ff3300;
+    }
+
+    .button[disabled] {
+        background-color: #ddd;
+        cursor: not-allowed;
+    }
+
+    /* 입력 필드 및 버튼 컨테이너 */
+    .form-container {
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
 </style>
 </head>
 <body>
@@ -188,20 +304,27 @@
     		</div>
     		<div class="detail_top_wrap new22">
     			<div class="tit_info">
-    				<strong>${movie.mo_title }</strong>
+    				<strong id="movieTitle">${movie.mo_title }</strong>
     			</div>
     			<ul class="mov_info1">
-    				<li><span class="roboto"><fmt:formatDate value="${movie.mo_date }" pattern="yyyy-MM-dd"/></span> <!-- 개봉일 --></li>
-    				<li><span class="roboto">${movie.mo_time }</span> "분" <!-- 상영시간 --></li>
-    				<li><span class="roboto">${movie.mo_age }</span> "세" <!-- 시청 가능 연령 --></li>
+    				<li><span id="releaseDate"><fmt:formatDate value="${movie.mo_date }" pattern="yyyy-MM-dd"/></span> <!-- 개봉일 --></li>
+    				<li><span id="duration">${movie.mo_time }</span> "분" <!-- 상영시간 --></li>
+    				<li><span id="ageRating">${movie.mo_age }</span> "세" <!-- 시청 가능 연령 --></li>
     			</ul>
-    			<div class="txtarea_box movdetailtxt">
+    			<div class="txtarea_box movdetailtxt" id="movieDescription">
     				<div class="txtarea">
     					<span>${movie.mo_content }
     					</span>
     				</div>
     			</div>
-    			<a href="#" class="button">예매하기</a>
+  				<div style="text-align: right;">
+    					<!-- 수정 기능 추가 -->
+       					<button id="editBtn" class="button">수정하기</button>
+       					<button id="saveBtn" class="button" style="display:none;">저장하기</button>
+    				<c:if test="${isAdmin}">
+    				</c:if>
+    				<a href="#" class="button">예매하기</a>
+    				</div>
     		</div>
     	</div>
   		<div class="tab_con">
@@ -214,12 +337,19 @@
   							<li><em>감독</em><span>감독</span></li>
   							<li><em>출연</em><span>배우</span></li>
   						</ul>
+  						<!-- 영화정보 관리자 로그인 시에만 보이는 수정 버튼 -->
+  						 <div style="text-align: right;">
+       							<button id="editInfoBtn" class="button">정보 수정</button>
+       							<button id="saveInfoBtn" class="button" style="display:none;">저장하기</button>
+    						<c:if test="${isAdmin}">
+    						</c:if>
+    					</div>
   					</div>
   				</div>
   			</div>
   		</div>
    </div>
-   <footer class="footer">
+   <!-- <footer class="footer">
         <div class="footer-content">
             <p>Team Members:</p>
             <ul class="team-list">
@@ -229,6 +359,63 @@
                 <li>박광균</li>
             </ul>
         </div>
-    </footer>
+    </footer> -->
+        <!-- JavaScript 코드 -->
+    <script>
+    const editBtn = document.getElementById('editBtn');
+    const saveBtn = document.getElementById('saveBtn');
+    const fieldsToEdit = ['movieTitle', 'releaseDate', 'duration', 'ageRating', 'movieDescription'];
+
+    // 수정 버튼 클릭 시
+    editBtn.addEventListener('click', () => {
+        fieldsToEdit.forEach(id => {
+            const element = document.getElementById(id);
+            const currentValue = element.textContent;
+            element.innerHTML = `<input class="edit-input" type='text' value='\${currentValue}' />`;
+        });
+        editBtn.style.display = 'none';
+        saveBtn.style.display = 'inline-block';
+    });
+
+    // 저장 버튼 클릭 시
+    saveBtn.addEventListener('click', () => {
+        fieldsToEdit.forEach(id => {
+            const element = document.getElementById(id);
+            const inputField = element.querySelector('input');
+            if (inputField) {
+                element.textContent = inputField.value;
+            }
+        });
+        editBtn.style.display = 'inline-block';
+        saveBtn.style.display = 'none';
+    });
+
+    // 영화 정보 수정
+    const editInfoBtn = document.getElementById('editInfoBtn');
+    const saveInfoBtn = document.getElementById('saveInfoBtn');
+    const infoFieldsToEdit = ['genre', 'director', 'actors'];
+
+    editInfoBtn.addEventListener('click', () => {
+        infoFieldsToEdit.forEach(id => {
+            const element = document.getElementById(id);
+            const currentValue = element.textContent;
+            element.innerHTML = `<input class="edit-input" type='text' value='\${currentValue}' />`;
+        });
+        editInfoBtn.style.display = 'none';
+        saveInfoBtn.style.display = 'inline-block';
+    });
+
+    saveInfoBtn.addEventListener('click', () => {
+        infoFieldsToEdit.forEach(id => {
+            const element = document.getElementById(id);
+            const inputField = element.querySelector('input');
+            if (inputField) {
+                element.textContent = inputField.value;
+            }
+        });
+        editInfoBtn.style.display = 'inline-block';
+        saveInfoBtn.style.display = 'none';
+    });
+    </script> 
 </body>
 </html>

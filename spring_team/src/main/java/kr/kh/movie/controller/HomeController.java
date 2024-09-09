@@ -33,11 +33,11 @@ public class HomeController {
 		return "/main/home";
 	}
 	
-	@GetMapping("/main/moviedetail") 
-	public String movieDetail(Model model, int mo_num) {
-		 MovieVO movie = movieService.selectMovie(mo_num);
-		 model.addAttribute("movie", movie); 
-		 return "/main/moviedetail"; 
+	  @GetMapping("/main/moviedetail") 
+	  public String movieDetail(Model model, int mo_num) {
+	  MovieVO movie = movieService.selectMovie(mo_num);
+	  model.addAttribute("movie", movie); 
+	  return "/main/moviedetail"; 
 	}
 	 
 }
