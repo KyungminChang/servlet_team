@@ -66,15 +66,11 @@ public class HomeController {
 	}
  	
  	@PostMapping("/main/movieregistration")
-    public String movieRegistrationInsert(Model model,
-                                          @RequestBody MovieVO movie) {
-        
-        // MovieVO 객체 생성 및 데이터 설정
-        MovieVO movie =  movieService.insertMovie(movie);
-
-        // 홈 페이지로 리다이렉트
-        return "redirect:/main/home";
-    }
+ 	public String movieRegistrationInsert(Model model, MovieVO movie) {
+ 		movieService.insertMovie(movie);
+ 		 return "redirect:/main/home";
+ 	}
+	    
 	    
 }
 

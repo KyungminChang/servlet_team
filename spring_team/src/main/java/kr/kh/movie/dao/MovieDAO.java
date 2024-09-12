@@ -14,7 +14,7 @@ public interface MovieDAO {
 
 	void updateMovie(MovieVO movie);
 
-	void insertMovie(MovieVO movie);
+	void insertMovie(@Param("mo")MovieVO movie);
 
 
 

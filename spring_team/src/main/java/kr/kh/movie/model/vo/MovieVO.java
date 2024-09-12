@@ -21,7 +21,8 @@ public class MovieVO {
 	private String mo_genre;
 	private String mo_image;
 	
-	public MovieVO(String mo_title, String mo_content, int mo_time, String mo_age, Date mo_date, String mo_genre) {
+	public MovieVO(String mo_image, String mo_title, String mo_content, int mo_time, String mo_age, Date mo_date, String mo_genre) {
+		this.mo_image = mo_image;
 		this.mo_title = mo_title;
 		this.mo_content = mo_content;
 		this.mo_time = mo_time;
