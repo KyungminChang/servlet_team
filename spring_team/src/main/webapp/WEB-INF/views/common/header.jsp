@@ -61,12 +61,24 @@
         <div class="logo">
            <a href="<c:url value="/main/home"/>">KH CINEMA</a>
         </div>
-        <div class="menu">
-        	<a href="#">회원가입</a>
-        	<a href="#">로그인</a>
-            <a href="#">영화</a>
-            <a href="#">예매</a>
-        </div>
+		<div class="menu">
+    		<!-- 비로그인 상태에서 회원가입과 로그인 버튼 표시 -->
+        			<a href="#">회원가입</a>
+        			<a href="#">로그인</a>
+    			<c:if test="${!isLoggedIn}">
+    			</c:if>    
+   		 	<!-- 로그인 상태에서 로그아웃 버튼 표시 -->
+        			<a href="#">로그아웃</a>
+    			<c:if test="${isLoggedIn}">
+    			</c:if>  
+        			<a href="#">환불</a>
+    			<c:if test="${isLoggedIn}">
+    			</c:if>      
+    		<!-- 관리자 로그인 시 영화 등록 버튼 표시 -->
+        			<a href="<c:url value="/main/movieregistration"/>">영화 등록</a>
+    			<c:if test="${isAdmin}">
+    			</c:if>
+		</div>
     </nav>
 </body>
 </html>

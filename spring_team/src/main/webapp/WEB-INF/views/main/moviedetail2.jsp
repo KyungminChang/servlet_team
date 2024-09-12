@@ -296,35 +296,36 @@
 </style>
 </head>
 <body>
- <body>
 
     <div id="contents_new23">
-     <form id="movieForm" method="POST" action="<c:url value="/main/moviedetail/update"/>">
     	<div id="contents" class="contents_movie_detail">
     		<div class="poster_info">
     			<img alt="영화상세" src="${movie.mo_image }">
     		</div>
     		<div class="detail_top_wrap new22">
     			<div class="tit_info">
-    				<h1 id="mo_num" style="display: none">${movie.mo_num }</h1>
-    				<strong id="mo_title">${movie.mo_title }</strong>
+    				<strong id="movieTitle">${movie.mo_title }</strong>
     			</div>
     			<ul class="mov_info1">
-    				<li><span id="mo_date"><fmt:formatDate value="${movie.mo_date }" pattern="yyyy-MM-dd"/></span> <!-- 개봉일 --></li>
-    				<li><span id="mo_time">${movie.mo_time }</span> "분" <!-- 상영시간 --></li>
-    				<li><span id="mo_age">${movie.mo_age }</span> "세" <!-- 시청 가능 연령 --></li>
+    				<li><span id="releaseDate"><fmt:formatDate value="${movie.mo_date }" pattern="yyyy-MM-dd"/></span> <!-- 개봉일 --></li>
+    				<li><span id="duration">${movie.mo_time }</span> "분" <!-- 상영시간 --></li>
+    				<li><span id="ageRating">${movie.mo_age }</span> "세" <!-- 시청 가능 연령 --></li>
     			</ul>
-    			<div class="txtarea_box movdetailtxt" id="mo_content">
+    			<div class="txtarea_box movdetailtxt" id="movieDescription">
     				<div class="txtarea">
     					<span>${movie.mo_content }
     					</span>
     				</div>
     			</div>
   				<div style="text-align: right;">
+    					<!-- 수정 기능 추가 -->
+       					<button id="editBtn" class="button">수정하기</button>
+       					<button id="saveBtn" class="button" style="display:none;">저장하기</button>
+       					
     				<c:if test="${isAdmin}">
     				</c:if>
     				<a href="#" class="button">예매하기</a>
-    				</div>
+   				</div>
     		</div>
     	</div>
   		<div class="tab_con">
@@ -333,13 +334,14 @@
   					<div class="movi_tab_info1">
   						<h4 class="tit_info_type1">영화정보</h4>
   						<ul class="detail_info2">
-  							<li><em>장르</em><span id="mo_genre">${movie.mo_genre}</span></li>
-  							<li><em>출연</em><span id="ch_name">배우</span></li>
+  							<li><em>장르</em><span>장르/제작국가</span></li>
+  							<li><em>감독</em><span>감독</span></li>
+  							<li><em>출연</em><span>배우</span></li>
   						</ul>
   						<!-- 영화정보 관리자 로그인 시에만 보이는 수정 버튼 -->
   						 <div style="text-align: right;">
-                                    <button id="editInfoBtn" class="button" type="button">정보 수정</button>
-                                    <button type="submit" id="saveInfoBtn" class="button" style="display:none;">저장하기</button>
+       							<button id="editInfoBtn" class="button">정보 수정</button>
+       							<button id="saveInfoBtn" class="button" style="display:none;">저장하기</button>
     						<c:if test="${isAdmin}">
     						</c:if>
     					</div>
@@ -347,8 +349,7 @@
   				</div>
   			</div>
   		</div>
-  	</form>
-  </div>
+   </div>
    <!-- <footer class="footer">
         <div class="footer-content">
             <p>Team Members:</p>
@@ -362,58 +363,96 @@
     </footer> -->
         <!-- JavaScript 코드 -->
     <script>
-    $(document).ready(function() {
-        const fieldsToEdit = ['mo_num','mo_title', 'mo_date', 'mo_time', 'mo_age', 'mo_content'];
+    const editBtn = document.getElementById('editBtn');
+    const saveBtn = document.getElementById('saveBtn');
+    const fieldsToEdit = ['movieTitle', 'releaseDate', 'duration', 'ageRating', 'movieDescription'];
 
-        // 수정 버튼 클릭 시
-        $('#editBtn, #editInfoBtn').on('click', function() {
-            fieldsToEdit.forEach(function(id) {
-                const $element = $('#' + id);
-                const currentValue = $element.text();
-
-                if (id === 'mo_content') {
-                    $element.html(`<textarea name="\${id}" rows="5">\${currentValue}</textarea>`);
-                } else {
-                    $element.html(`<input type="text" name="\${id}" value="\${currentValue}" />`);
-                }
-            });
-
-            $('#saveBtn, #saveInfoBtn').show();
-            $('#editBtn, #editInfoBtn').hide();
+    // 수정 버튼 클릭 시
+    editBtn.addEventListener('click', () => {
+        fieldsToEdit.forEach(id => {
+            const element = document.getElementById(id);
+            const currentValue = element.textContent;
+            element.innerHTML = `<input class="edit-input" type='text' value='\${currentValue}' />`;
         });
-
-        // 폼 서브밋 처리
-        $('#movieForm').on('submit', function(event) {
-            event.preventDefault(); // 폼 제출 방지
-         
-            const movie = {}; // movie 객체 정의
-            fieldsToEdit.forEach(function(id) {
-                const $element = $(`[name="\${id}"]`);
-                movie[id] = $element.val(); // 각 필드의 값을 JSON 객체에 저장
-            });
-            // Ajax 요청을 통해 서버로 전송
-            $.ajax({
-                type: 'POST',
-                url: '<c:url value="/main/moviedetail/update"/>',
-                data: JSON.stringify(movie), // JSON 문자열 전송
-                contentType: 'application/json; charset=utf-8', // 요청 헤더 설정
-                success: function(response) {
-                    fieldsToEdit.forEach(function(id) {
-                        const $element = $('#' + id);
-                        const newValue = $(`[name="\${id}"]`).val();
-                        $element.text(newValue); // 입력된 값을 텍스트로 변환
-                    });
-
-                    $('#editBtn, #editInfoBtn').show();
-                    $('#saveBtn, #saveInfoBtn').hide();
-                },
-                error: function(err) {
-                    console.error("Error:", err);
-                    alert("저장 중 오류가 발생했습니다.");
-                }
-            });
-        });
+        editBtn.style.display = 'none';
+        saveBtn.style.display = 'inline-block';
     });
+
+    // 저장 버튼 클릭 시
+    saveBtn.addEventListener('click', () => {
+        fieldsToEdit.forEach(id => {
+            const element = document.getElementById(id);
+            const inputField = element.querySelector('input');
+            if (inputField) {
+                element.textContent = inputField.value;
+            }
+        });
+        editBtn.style.display = 'inline-block';
+        saveBtn.style.display = 'none';
+    });
+
+    // 영화 정보 수정
+    const editInfoBtn = document.getElementById('editInfoBtn');
+    const saveInfoBtn = document.getElementById('saveInfoBtn');
+    const infoFieldsToEdit = ['genre', 'director', 'actors'];
+
+    editInfoBtn.addEventListener('click', () => {
+        infoFieldsToEdit.forEach(id => {
+            const element = document.getElementById(id);
+            const currentValue = element.textContent;
+            element.innerHTML = `<input class="edit-input" type='text' value='\${currentValue}' />`;
+        });
+        editInfoBtn.style.display = 'none';
+        saveInfoBtn.style.display = 'inline-block';
+    });
+
+    saveInfoBtn.addEventListener('click', () => {
+        infoFieldsToEdit.forEach(id => {
+            const element = document.getElementById(id);
+            const inputField = element.querySelector('input');
+            if (inputField) {
+                element.textContent = inputField.value;
+            }
+        });
+        editInfoBtn.style.display = 'inline-block';
+        saveInfoBtn.style.display = 'none';
+    });
+
+
+    document.getElementById('saveBtn').addEventListener('click', function() {
+        // 화면에 있는 값들을 수집
+        const movieTitle = document.getElementById('movieTitle').textContent.trim();
+        const releaseDate = document.getElementById('releaseDate').textContent.trim();
+        const duration = document.getElementById('duration').textContent.trim();
+        const ageRating = document.getElementById('ageRating').textContent.trim();
+        const movieDescription = document.getElementById('movieDescription').textContent.trim();
+        const mo_num = "${movie.mo_num}"; // 영화 번호도 함께 전송
+
+        // AJAX 요청 생성
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '<c:url value="/main/moviedetail/update"/>', true);
+        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+        
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                // 요청이 성공적으로 처리되었을 때의 처리
+                alert('영화 정보가 성공적으로 업데이트되었습니다.');
+                window.location.reload(); // 페이지 새로고침
+            }
+        };
+
+        // 서버로 데이터 전송
+        const data = JSON.stringify({
+            mo_num: mo_num,
+            mo_title: movieTitle,
+            mo_date: releaseDate,
+            mo_time: duration,
+            mo_age: ageRating,
+            mo_content: movieDescription
+        });
+        xhr.send(data);
+    });
+    
     </script> 
 </body>
 </html>
